@@ -14,6 +14,19 @@ return new class extends Migration
         Schema::create('riesgos', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('nombre');
+            $table->text('descripcion')->nullable();
+            $table->string('nivel');
+            
+            // Coordenadas múltiples para polígonos
+            $table->decimal('latitud1', 10, 8)->nullable();
+            $table->decimal('longitud1', 11, 8)->nullable();
+            $table->decimal('latitud2', 10, 8)->nullable();
+            $table->decimal('longitud2', 11, 8)->nullable();
+            $table->decimal('latitud3', 10, 8)->nullable();
+            $table->decimal('longitud3', 11, 8)->nullable();
+            $table->decimal('latitud4', 10, 8)->nullable();
+            $table->decimal('longitud4', 11, 8)->nullable();
         });
     }
 
