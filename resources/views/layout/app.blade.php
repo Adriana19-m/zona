@@ -79,6 +79,9 @@
 
         <li  class="nav-item"><a class="nav-link" href="{{ route('seguras.create') }}"><i class="bi bi-map-fill"></i> Nuevas Zonas Seguras</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('seguras.index') }}"><i class="bi bi-house-door-fill"></i> zonas S</a></li>
+        <li  class="nav-item"><a class="nav-link" href="{{ route('encuentros.create') }}"><i class="bi bi-map-fill"></i> Nuevos Puntos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('encuentros.index') }}"><i class="bi bi-house-door-fill"></i> vista de puntos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('encuentros/mapa') }}"><i class="bi bi-map-fill"></i> Ver Puntos Mapa</a></li>
 
       </ul>
       <ul class="navbar-nav ms-auto">
