@@ -13,7 +13,7 @@
 
         <a href="{{ route('riesgos.create') }}" class="btn btn-primary mb-3">➕ Agregar Nuevo Riesgo</a>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="{{ route('riesgos.mapa') }}" class="btn btn-success mb-3">Ver Mapa Global</a>
+        
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped">
