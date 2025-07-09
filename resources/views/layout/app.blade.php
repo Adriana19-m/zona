@@ -77,6 +77,7 @@
         <li class="nav-item"><a class="nav-link" href="{{ route('riesgos.index') }}"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('riesgos.create') }}"><i class="bi bi-plus-circle-fill"></i> Nuevo Riesgo</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url('riesgos/mapa') }}"><i class="bi bi-map-fill"></i> Ver Mapa</a></li>
+        <li  class="nav-item"><a class="nav-link" href="{{ route('seguras.create') }}"><i class="bi bi-map-fill"></i> Ver Zonas Seguras</a></li>
       </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">

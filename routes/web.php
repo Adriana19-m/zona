@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RiesgoController;
+use App\Http\Controllers\SegurasController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,3 +12,5 @@ Route::get('/riesgos/mapa', [RiesgoController::class, 'mapa'])->name('riesgos.ma
 
 // Rutas RESTful: index, create, store, edit, update, destroy, show
 Route::resource('riesgos', RiesgoController::class);
+
+Route::resource('seguras', SegurasController::class);
