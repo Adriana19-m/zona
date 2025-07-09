@@ -1,9 +1,6 @@
 @extends('layout.app')
 
 @section('contenido')
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyXXX1234567890abcdef&callback=initMapaZonas"></script>
-
-
 <div class="container mt-4">
     <h1 class="mb-4">Listado de Zonas Seguras</h1>
 
@@ -13,8 +10,9 @@
 
     <a href="{{ route('seguras.create') }}" class="btn btn-primary mb-3">➕ Registrar Nueva Zona</a>
 
-    <!-- Mapa de Zonas -->
-    <div id="mapaZonas" style="height: 500px; width: 100%; border: 2px solid black;"></div>
+    <!-- Mapa de Zonas - Versión corregida -->
+    <div id="mapaZonas" style="height: 500px; width: 100%; border: 2px solid black; margin-bottom: 20px;"></div>
+    <div id="map-error" style="display: none;" class="alert alert-danger"></div>
 
     <br>
 
@@ -65,46 +63,107 @@
     </div>
 </div>
 
-{{-- Cargar Google Maps JS --}}
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMapaZonas">
-</script>
-
 <script>
-    function initMapaZonas() {
-        var centro = { lat: -0.9374805, lng: -78.6161327 };
-        var mapa = new google.maps.Map(document.getElementById('mapaZonas'), {
-            zoom: 13,
-            center: centro,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
+    // Función para cargar Google Maps de forma segura
+    function loadGoogleMaps() {
+        // Verificar si ya está cargado
+        if (window.google && window.google.maps) {
+            initMapaZonas();
+            return;
+        }
 
-        const zonas = @json($seguras);
-
-        zonas.forEach(zona => {
-            let centro = { lat: parseFloat(zona.latitud), lng: parseFloat(zona.longitud) };
-
-            let color = zona.tipo === 'PUBLICA' ? '#28a745' : '#dc3545'; // verde o rojo
-
-            // Dibuja círculo
-            new google.maps.Circle({
-                strokeColor: color,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: color,
-                fillOpacity: 0.35,
-                map: mapa,
-                center: centro,
-                radius: parseFloat(zona.radio)
-            });
-
-            // Agrega marcador con nombre
-            new google.maps.Marker({
-                position: centro,
-                map: mapa,
-                title: zona.nombre
-            });
-        });
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyB0qMP6QpknxzQtVxvF-JT3DVvZ00O0_7k&libraries=places&callback=initMapaZonas';
+        script.async = true;
+        script.defer = true;
+        script.onerror = function() {
+            document.getElementById('map-error').style.display = 'block';
+            document.getElementById('map-error').textContent = 'Error al cargar Google Maps. Por favor recarga la página.';
+        };
+        document.head.appendChild(script);
     }
+
+    // Función principal del mapa
+    function initMapaZonas() {
+        try {
+            const zonas = @json($seguras);
+            
+            // Si no hay zonas, mostrar mensaje
+            if (zonas.length === 0) {
+                document.getElementById('mapaZonas').style.display = 'none';
+                document.getElementById('map-error').style.display = 'block';
+                document.getElementById('map-error').textContent = 'No hay zonas para mostrar en el mapa';
+                return;
+            }
+
+            // Coordenadas iniciales (primera zona o centro por defecto)
+            const primeraZona = zonas[0];
+            const centro = primeraZona ? 
+                { lat: parseFloat(primeraZona.latitud), lng: parseFloat(primeraZona.longitud) } : 
+                { lat: -0.9374805, lng: -78.6161327 };
+
+            // Crear mapa
+            const mapa = new google.maps.Map(document.getElementById('mapaZonas'), {
+                zoom: 13,
+                center: centro,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+
+            // Añadir cada zona al mapa
+            zonas.forEach(zona => {
+                const centroZona = { 
+                    lat: parseFloat(zona.latitud), 
+                    lng: parseFloat(zona.longitud) 
+                };
+
+                // Configuración según tipo de zona
+                const color = zona.tipo === 'PUBLICA' ? '#28a745' : '#dc3545';
+                const icono = zona.tipo === 'PUBLICA' ? 
+                    'https://maps.google.com/mapfiles/ms/icons/green-dot.png' : 
+                    'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
+
+                // Círculo de la zona
+                new google.maps.Circle({
+                    strokeColor: color,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: color,
+                    fillOpacity: 0.35,
+                    map: mapa,
+                    center: centroZona,
+                    radius: parseFloat(zona.radio)
+                });
+
+                // Marcador
+                const marcador = new google.maps.Marker({
+                    position: centroZona,
+                    map: mapa,
+                    title: zona.nombre,
+                    icon: icono
+                });
+
+                // Ventana de información
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                        <div style="min-width: 200px">
+                            <h5 style="color: ${color}">${zona.nombre}</h5>
+                            <p><strong>Tipo:</strong> ${zona.tipo}</p>
+                            <p><strong>Radio:</strong> ${zona.radio} m</p>
+                        </div>
+                    `
+                });
+
+                marcador.addListener('click', () => infoWindow.open(mapa, marcador));
+            });
+
+        } catch (error) {
+            console.error('Error en el mapa:', error);
+            document.getElementById('map-error').style.display = 'block';
+            document.getElementById('map-error').textContent = 'Error al mostrar el mapa: ' + error.message;
+        }
+    }
+
+    // Cargar el mapa cuando la página esté lista
+    document.addEventListener('DOMContentLoaded', loadGoogleMaps);
 </script>
 @endsection
