@@ -13,7 +13,10 @@
 
     <a href="{{ route('encuentros.create') }}" class="btn btn-primary mb-3">➕ Agregar nuevo encuentro</a>
     &nbsp;&nbsp;&nbsp;
-    <a href="{{ route('encuentros.mapa') }}" class="btn btn-success mb-3">🗺️ Ver Mapa Global</a>
+    
+
+    {{-- Contenedor del Mapa --}}
+    <div id="map" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
@@ -58,4 +61,44 @@
         </table>
     </div>
 </div>
+
+{{-- Scripts para Google Maps --}}
+<script>
+    function initMap() {
+        // Coordenadas iniciales (centro del mapa)
+        const center = { lat: -34.397, lng: 150.644 };
+        
+        // Crear mapa
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 4,
+            center: center,
+        });
+
+        // Añadir marcadores para cada encuentro
+        @foreach($encuentros as $encuentro)
+            @if($encuentro->latitud && $encuentro->longitud)
+                new google.maps.Marker({
+                    position: { lat: {{ $encuentro->latitud }}, lng: {{ $encuentro->longitud }} },
+                    map: map,
+                    title: "{{ $encuentro->nombre }}"
+                });
+            @endif
+        @endforeach
+
+        // Ajustar el zoom y centro para mostrar todos los marcadores
+        if ({{ count($encuentros) }} > 0) {
+            const bounds = new google.maps.LatLngBounds();
+            @foreach($encuentros as $encuentro)
+                @if($encuentro->latitud && $encuentro->longitud)
+                    bounds.extend(new google.maps.LatLng({{ $encuentro->latitud }}, {{ $encuentro->longitud }}));
+                @endif
+            @endforeach
+            map.fitBounds(bounds);
+        }
+    }
+</script>
+
+<script async defer 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0qMP6QpknxzQtVxvF-JT3DVvZ00O0_7k&libraries=places&callback=initMap">
+</script>
 @endsection
