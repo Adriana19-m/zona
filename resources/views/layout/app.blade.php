@@ -76,25 +76,37 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item"><a class="nav-link" href="{{ route('riesgos.index') }}"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('riesgos.create') }}"><i class="bi bi-plus-circle-fill"></i> Nuevo Riesgo</a></li>
-
-        <li  class="nav-item"><a class="nav-link" href="{{ route('seguras.create') }}"><i class="bi bi-map-fill"></i> Nuevas Zonas Seguras</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('seguras.index') }}"><i class="bi bi-house-door-fill"></i> zonas S</a></li>
-        <li  class="nav-item"><a class="nav-link" href="{{ route('encuentros.create') }}"><i class="bi bi-map-fill"></i> Nuevos Puntos</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('encuentros.index') }}"><i class="bi bi-house-door-fill"></i> vista de puntos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url('encuentros-mapa') }}"><i class="bi bi-map-fill"></i> Ver Puntos Mapa</a></li>
-
+        <li class="nav-item"><a class="nav-link" href="{{ route('seguras.create') }}"><i class="bi bi-map-fill"></i> Nuevas Zonas Seguras</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('seguras.index') }}"><i class="bi bi-house-door-fill"></i> Zonas S</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('encuentros.create') }}"><i class="bi bi-map-fill"></i> Nuevos Puntos</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('encuentros.index') }}"><i class="bi bi-house-door-fill"></i> Vista de puntos</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('encuentros-mapa') }}"><i class="bi bi-map-fill"></i> Ver Puntos Mapa</a></li>
       </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-person-circle"></i> Cuenta
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#">Iniciar Sesión</a></li>
-            <li><a class="dropdown-item" href="#">Registrarse</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
-          </ul>
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle"></i>
+                @auth
+                    {{ Auth::user()->name }}
+                @else
+                    Cuenta
+                @endauth
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                @guest
+                    <li><a class="dropdown-item" href="{{ route('login') }}">Iniciar Sesión</a></li>  <!-- Cambiado a 'login' -->
+                    <li><a class="dropdown-item" href="{{ route('register') }}">Registrarse</a></li>  <!-- Cambiado a 'register' -->
+                @else
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item">Cerrar Sesión</button>
+                        </form>
+                    </li>
+                @endguest
+            </ul>
+        </li>
+    </ul>
         </li>
       </ul>
     </div>
@@ -105,9 +117,26 @@
 <div class="container my-5">
   <div class="card card-custom">
     <h2 class="main-title mb-4"><i class="bi bi-tools me-2"></i> MENÚ DE RIESGOS</h2>
-    <hr>
+    
+    {{-- Mensajes flash --}}
+    @if(session('success'))
+      <div class="alert alert-success">
+        {{ session('success') }}
+      </div>
+    @endif
+
+    @if($errors->any())
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
+
+    {{-- Contenido de cada vista --}}
     @yield('contenido')
-    <hr>
   </div>
 </div>
 
@@ -135,8 +164,8 @@
       <!-- Col 3 -->
       <div class="col-md-4 mb-3 text-md-end text-center">
         <h5>Cuenta</h5>
-        <a href="#" class="d-block">Iniciar sesión</a>
-        <a href="#" class="d-block">Registrarse</a>
+        <a href="{{ route('login') }}" class="d-block">Iniciar sesión</a>
+        <a href="{{ route('register') }}" class="d-block">Registrarse</a>
         <a href="#" class="d-block">Recuperar contraseña</a>
       </div>
     </div>
