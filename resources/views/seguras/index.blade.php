@@ -166,4 +166,5 @@
     // Cargar el mapa cuando la página esté lista
     document.addEventListener('DOMContentLoaded', loadGoogleMaps);
 </script>
+
 @endsection
