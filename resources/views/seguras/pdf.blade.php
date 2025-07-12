@@ -26,7 +26,7 @@
     @if(isset($qrBase64))
     <img src="{{ $qrBase64 }}" style="display:block; margin:20px auto 0 auto; width:150px;" alt="QR del mapa">
     <p style="text-align:center; font-size:12px;">Escanea para ver el mapa en línea</p>
-        @endif
+@endif
 
 
     <table>

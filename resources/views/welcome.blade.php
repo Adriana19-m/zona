@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIGESEC - Sistema de Gestión de Zonas Seguras</title>
+    <title>SIGESEC - Sistema de Gestión de Zonas</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -429,7 +429,11 @@
             <div class="nav-links">
                 <a href="#" class="nav-link">Inicio</a>
                 <a href="{{ route('seguras.pdf') }}" class="nav-link">Zonas Seguras</a>
-                <a href="#" class="nav-link">Mapas</a>
+                <a href="https://geoportal.quito.gob.ec/visor/mapas/gobernabilidad/mapa_valle.pdf" 
+                    class="nav-link" 
+                    target="_blank">
+                    Mapas
+                    </a>
                 <a href="#" class="nav-link">Recursos</a>
                 <a href="{{ route('login') }}" class="nav-link">Iniciar Sesión</a>
             </div>
@@ -442,7 +446,11 @@
             <h1 class="hero-title">Sistema Integral de Gestión de Zonas Seguras</h1>
             <p class="hero-subtitle">Protegiendo a las comunidades ecuatorianas mediante la identificación y gestión de zonas de seguridad ante emergencias</p>
             <div class="hero-buttons">
-                <a href="#" class="btn btn-primary">Explorar Mapa</a>
+                <a href="https://colegiofarina.edu.ec/images/Seguridad%20y%20Salud/2022-2023/PLAN_DE_EVACUACION-PROCESO_ERUPTIVO_VOLCAN_COTOPAXI22-23.pdf" 
+                    class="btn btn-primary" 
+                    target="_blank">
+                    Rutas de evacuaciones
+                    </a>
                 <a href="#" class="btn btn-outline">Aprender Más</a>
             </div>
         </div>
@@ -465,14 +473,8 @@
                 <div class="feature-content">
                     <h3 class="feature-title">Alertas Tempranas de Zonas Seguras</h3>
                     <p class="feature-desc">Recibe notificaciones instantáneas sobre emergencias y las rutas más seguras hacia los puntos de encuentro designados.</p>
-                    <a href="{{ route('seguras.pdf') }}" class="btn btn-primary" target="_blank">
+                    <a href="{{ route('seguras.pdf') }}" id="btnGenerarPDF" class="btn btn-primary" target="_blank">
                             <i class="fas fa-file-pdf"></i> Generar PDF
-                        </a>
-                        <button id="btnGenerarPDF" class="btn btn-primary">
-                            <i class="fas fa-file-pdf"></i> Generar PDF
-                        </button>
-                        <a href="{{ route('seguras.pdf') }}" id="btnGenerarPDF" class="btn btn-primary">
-                            <i class="fas fa-file-pdf"></i> Generar PDFF
                         </a>
 
                         <script>

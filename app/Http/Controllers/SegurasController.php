@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Response;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Log;
 
 
 class SegurasController extends Controller
@@ -109,8 +110,6 @@ class SegurasController extends Controller
 
         return $pdf->download('zonas_seguras.pdf');
     }
-
-  
     public function enviarMapa(Request $request)
     {
         $imageBase64 = $request->input('imagen');
@@ -119,14 +118,15 @@ class SegurasController extends Controller
         // Generar la URL que llevará el QR
         $urlMapa = route('seguras.index');
         // Crear el QR en base64
+        $qrPng = QrCode::format('png')->size(150)->generate($urlMapa);
         $qrBase64 = 'data:image/png;base64,' . base64_encode(QrCode::format('png')->size(150)->generate($urlMapa));
-
-        // Pasar el QR a la vista PDF
+        Log::info('QR Base64 generado: ' . substr($qrBase64, 0, 50));
         $pdf = Pdf::loadView('seguras.pdf', [
             'seguras' => $seguras,
             'mapaBase64' => $imageBase64,
             'qrBase64' => $qrBase64
         ])->setPaper('a4', 'landscape');
+        
 
         return Response::make($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
