@@ -434,7 +434,11 @@
                     target="_blank">
                     Mapas
                     </a>
-                <a href="#" class="nav-link">Recursos</a>
+                <a href="https://www.youtube.com/watch?v=O4nzleHZxfw" 
+                    class="nav-link" 
+                    target="_blank">
+                    Recursos
+                    </a>
                 <a href="{{ route('login') }}" class="nav-link">Iniciar Sesión</a>
             </div>
         </nav>
@@ -464,7 +468,7 @@
                 <div class="feature-content">
                     <h3 class="feature-title">Mapa Interactivo</h3>
                     <p class="feature-desc">Visualiza en tiempo real todas las zonas seguras y puntos de encuentro en tu localidad con nuestro mapa georreferenciado.</p>
-                    <a href="#" class="btn btn-primary">Ver Mapa</a>
+                    <a href="{{ route('riesgos.index') }}" class="btn btn-primary">Ver Mapa</a>
                 </div>
             </div>
             
