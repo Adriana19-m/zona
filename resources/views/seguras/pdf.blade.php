@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Reporte de Zonas Seguras</title>
     <style>
-        body { font-family: Arial, sans-serif; }
+        body { font-family: Arial, sans-serif; margin: 20px; }
         h1 { color: #2c3e50; text-align: center; }
+        .map-container { 
+            width: 100%; 
+            height: 400px; 
+            margin: 20px 0;
+            background-color: #f5f5f5;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
-        .segura { background-color: #d4edda; color: #155724; }
-        .riesgo { background-color: #f8d7da; color: #721c24; }
-        .mapa-img { display: block; margin: 0 auto; margin-top: 20px; max-width: 100%; }
-        .fecha { text-align: center; font-size: 14px; margin-top: 10px; }
+        .badge { padding: 5px 10px; border-radius: 3px; color: white; }
+        .safe { background-color: #28a745; }
+        .risk { background-color: #dc3545; }
     </style>
 </head>
 <body>
-    <h1>Reporte de Zonas Seguras</h1>
-    <p class="fecha">Fecha de generación: {{ now()->format('d/m/Y H:i:s') }}</p>
-
-    {{-- Mostrar imagen del mapa si existe --}}
-    @if(isset($mapaBase64))
-        <img src="{{ $mapaBase64 }}" class="mapa-img" alt="Mapa de zonas seguras">
-    @endif
-    @if(isset($qrBase64))
-    <img src="{{ $qrBase64 }}" style="display:block; margin:20px auto 0 auto; width:150px;" alt="QR del mapa">
-    <p style="text-align:center; font-size:12px;">Escanea para ver el mapa en línea</p>
-@endif
-
-
+    <h1>📍 Reporte de Zonas Seguras</h1>
+    
+    <!-- Mapa estático (versión simplificada) -->
+    <div class="map-container">
+        <div>
+            <p><strong>Mapa de Zonas</strong></p>
+            <p>Este reporte incluye {{ count($seguras) }} zonas registradas</p>
+            @foreach($coordenadas as $coord)
+                <p>Zona {{ $loop->iteration }}: {{ $coord['lat'] }}, {{ $coord['lng'] }}</p>
+            @endforeach
+        </div>
+    </div>
+    
+    <!-- Tabla de datos -->
     <table>
         <thead>
             <tr>
@@ -42,10 +51,16 @@
         </thead>
         <tbody>
             @foreach($seguras as $zona)
-                <tr class="{{ $zona->tipo == 'PUBLICA' ? 'segura' : 'riesgo' }}">
+                <tr>
                     <td>{{ $zona->id }}</td>
                     <td>{{ $zona->nombre }}</td>
-                    <td>{{ $zona->tipo == 'PUBLICA' ? 'ZONA SEGURA' : 'ZONA EN RIESGO' }}</td>
+                    <td>
+                        @if($zona->tipo == 'PUBLICA')
+                            <span class="badge safe">ZONA SEGURA</span>
+                        @else
+                            <span class="badge risk">ZONA EN RIESGO</span>
+                        @endif
+                    </td>
                     <td>{{ number_format($zona->radio, 2) }}</td>
                     <td>{{ $zona->latitud }}</td>
                     <td>{{ $zona->longitud }}</td>

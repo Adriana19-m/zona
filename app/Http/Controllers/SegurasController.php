@@ -97,42 +97,38 @@ class SegurasController extends Controller
     }
     
 
-  public function generarPDF(Request $request)
+  public function generarPDF()
     {
         $seguras = Seguras::all();
+        
+        // Necesitamos pasar las coordenadas para el mapa estático
+        $coordenadas = $seguras->map(function($zona) {
+            return [
+                'lat' => $zona->latitud,
+                'lng' => $zona->longitud,
+                'tipo' => $zona->tipo,
+                'radio' => $zona->radio
+            ];
+        });
 
-        // Aquí puedes recibir la imagen base64 y el QR (opcionalmente)
-        $mapaBase64 = $request->input('mapaBase64', null);
-        $qrBase64 = $request->input('qrBase64', null);
-
-        $pdf = PDF::loadView('seguras.pdf', compact('seguras', 'mapaBase64', 'qrBase64'))
-                ->setPaper('a4', 'landscape');
+        $pdf = PDF::loadView('seguras.pdf', [
+            'seguras' => $seguras,
+            'coordenadas' => $coordenadas
+        ])->setPaper('a4', 'landscape');
 
         return $pdf->download('zonas_seguras.pdf');
     }
+   
     public function enviarMapa(Request $request)
-    {
-        $imageBase64 = $request->input('imagen');
-        $seguras = Seguras::all();
-
-        // Generar la URL que llevará el QR
-        $urlMapa = route('seguras.index');
-        // Crear el QR en base64
-        $qrPng = QrCode::format('png')->size(150)->generate($urlMapa);
-        $qrBase64 = 'data:image/png;base64,' . base64_encode(QrCode::format('png')->size(150)->generate($urlMapa));
-        Log::info('QR Base64 generado: ' . substr($qrBase64, 0, 50));
-        $pdf = Pdf::loadView('seguras.pdf', [
-            'seguras' => $seguras,
-            'mapaBase64' => $imageBase64,
-            'qrBase64' => $qrBase64
-        ])->setPaper('a4', 'landscape');
-        
-
-        return Response::make($pdf->output(), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="zonas_seguras.pdf"'
-        ]);
-    }
+        {
+            $image = $request->input('imagen');
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageData = base64_decode($image);
+            
+            $pdf = PDF::loadView('pdf.zonas', ['image' => $imageData]);
+            return $pdf->download('zonas_seguras.pdf');
+        }
     
 
 }

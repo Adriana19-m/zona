@@ -166,5 +166,34 @@
     // Cargar el mapa cuando la página esté lista
     document.addEventListener('DOMContentLoaded', loadGoogleMaps);
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+document.getElementById('btnGenerarPDF').addEventListener('click', function () {
+    html2canvas(document.getElementById('mapaZonas')).then(function (canvas) {
+        const imageData = canvas.toDataURL('image/png');
+
+        fetch('{{ route("seguras.enviarMapa") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imagen: imageData })
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'zonas_seguras.pdf';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        });
+    });
+});
+</script>
+
 
 @endsection
