@@ -468,9 +468,10 @@
             <div class="feature-card">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTASW6O1wJ1TOw2o8d9C7vD_zvSejf6jxhExA&s">
                 <div class="feature-content">
-                    <h3 class="feature-title">Mapa Interactivo</h3>
+                    <h3 class="feature-title">Mapa de riesgos</h3>
                     <p class="feature-desc">Visualiza en tiempo real todas las zonas seguras y puntos de encuentro en tu localidad con nuestro mapa georreferenciado.</p>
-                    <a href="{{ route('riesgos.index') }}" class="btn btn-primary">Ver Mapa</a>
+                    <a href="{{ url('/riesgos/mapa') }}" class="btn btn-primary">Mapa de riesgos</a>
+                     
                 </div>
             </div>
             
@@ -519,9 +520,9 @@
             <div class="feature-card">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlQxHP4dG1fRGcaxw_odWPtddnSEUbo6OIlQ&s" alt="Comunidad" class="feature-img">
                 <div class="feature-content">
-                    <h3 class="feature-title">Participación Comunitaria</h3>
+                    <h3 class="feature-title">Puntos de encuentro Seguros</h3>
                     <p class="feature-desc">Contribuye reportando nuevas zonas seguras o actualizando la información existente para beneficio de toda la comunidad.</p>
-                    <a href="#" class="btn btn-primary">Contribuir</a>
+                    <a href="{{ url('encuentros-mapa') }}" class="btn btn-primary">Ver Puntos Seguros</a>
                 </div>
             </div>
         </div>

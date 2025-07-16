@@ -1,6 +1,8 @@
 @extends('layout.app')
 
 @section('contenido')
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_AQUI&libraries=places&callback=initMap"></script>
+
 <div class="container">
     <h1 class="my-4">🗺️ Mapa de Encuentros</h1>
     

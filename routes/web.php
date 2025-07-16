@@ -23,16 +23,15 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/seguras/enviar-mapa', [SegurasController::class, 'enviarMapa'])->name('seguras.enviarMapa');
 Route::get('/seguras/generar-pdf', [SegurasController::class, 'generarPDF'])->name('seguras.pdf');
+Route::get('/riesgos/mapa', [RiesgoController::class, 'mapa'])->name('riesgos.mapa');
 // Rutas de recursos
 Route::resource('riesgos', RiesgoController::class);
 Route::resource('seguras', SegurasController::class);
 Route::resource('encuentros', EncuentroController::class);
 
 // Rutas adicionales para mapas
-Route::get('/riesgos/mapa', [RiesgoController::class, 'mapa'])->name('riesgos.mapa');
+
 Route::get('encuentros-mapa', [EncuentroController::class, 'mapa'])->name('encuentros.mapa');
-// Ruta para PDF específica
-
-
+// Ruta resource que incluye show (si la necesitas)
 
 

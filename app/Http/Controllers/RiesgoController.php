@@ -168,8 +168,46 @@ class RiesgoController extends Controller
      * Mostrar los riesgos en un mapa.
      */
     public function mapa()
+        {
+            $riesgos = Riesgo::all()->map(function ($riesgo) {
+                $coordenadas = collect([
+                    ['latitud' => $riesgo->latitud1, 'longitud' => $riesgo->longitud1],
+                    ['latitud' => $riesgo->latitud2, 'longitud' => $riesgo->longitud2],
+                    ['latitud' => $riesgo->latitud3, 'longitud' => $riesgo->longitud3],
+                    ['latitud' => $riesgo->latitud4, 'longitud' => $riesgo->longitud4],
+                ])->filter(function ($coord) {
+                    return !is_null($coord['latitud']) && !is_null($coord['longitud']);
+                })->values();
+
+                return [
+                    'id' => $riesgo->id,
+                    'nombre' => $riesgo->nombre,
+                    'descripcion' => $riesgo->descripcion,
+                    'nivel' => $riesgo->nivel,
+                    'coordenadas' => $coordenadas,
+                ];
+            });
+
+            return view('riesgos.mapa', compact('riesgos'));
+        }
+    public function show($id)
     {
-        $riesgos = Riesgo::all();
-        return view('riesgos.mapa', compact('riesgos'));
+        $riesgo = Riesgo::findOrFail($id);
+        
+        $coordenadas = collect([
+            ['latitud' => $riesgo->latitud1, 'longitud' => $riesgo->longitud1],
+            ['latitud' => $riesgo->latitud2, 'longitud' => $riesgo->longitud2],
+            ['latitud' => $riesgo->latitud3, 'longitud' => $riesgo->longitud3],
+            ['latitud' => $riesgo->latitud4, 'longitud' => $riesgo->longitud4],
+        ])->filter(function ($coord) {
+            return !is_null($coord['latitud']) && !is_null($coord['longitud']);
+        })->values();
+
+        return view('riesgos.show', [
+            'riesgo' => $riesgo,
+            'coordenadas' => $coordenadas
+        ]);
     }
+
+
 }
